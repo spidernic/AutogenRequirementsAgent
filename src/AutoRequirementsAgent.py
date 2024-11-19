@@ -1,4 +1,31 @@
-import os
+'''
+# AutoRequirementsAgent
+
+This is a Python-based automation tool designed to streamline the process of generating and refining requirements for any project or topic. Powered by Open Source LLMs, it leverages advanced natural language understanding to:
+
+Generate a logical plan tailored to the given topic.
+Detail requirements across functional, non-functional, integration, and operational dimensions.
+Simulate a QA Manager’s review process for rigorous quality assurance.
+Output requirements in JSON and text formats for seamless integration and documentation.
+This tool is ideal for developers, project managers, business analysts, and system architects seeking to save time, ensure consistency, and improve the quality of their requirements gathering process
+
+## Author Information
+- **Author**: Nic Cravino
+- **Email**: spidernic@me.com 
+- **LinkedIn**: [Nic Cravino](https://www.linkedin.com/in/nic-cravino)
+- **Date**: November 17, 2024
+
+## License: Apache License 2.0 (Open Source)
+This tool is licensed under the Apache License, Version 2.0. This is a permissive license that allows you to use, distribute, and modify the software, subject to certain conditions:
+
+- **Freedom of Use**: Users are free to use the software for personal, academic, or commercial purposes.
+- **Modification and Distribution**: You may modify and distribute the software, provided that you include a copy of the Apache 2.0 license and state any significant changes made.
+- **Attribution**: Original authorship and contributions must be acknowledged when redistributing the software or modified versions of it.
+- **Patent Grant**: Users are granted a license to any patents covering the software, ensuring protection from patent claims on original contributions.
+- **Liability Disclaimer**: The software is provided "as is," without warranties or conditions of any kind. The authors and contributors are not liable for any damages arising from its use.
+
+For full details, see the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+'''
 import json
 import yaml
 import autogen
