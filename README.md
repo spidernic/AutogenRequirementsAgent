@@ -133,6 +133,7 @@ graph TD
     UserInput --> Initializer
     Initializer --> PlanningAgent
     PlanningAgent --> Analyst
+    PlanningAgent -->|plan| OutputFiles
     Analyst --> QAManager
     QAManager -->|Feedback or Approval| Analyst
     Analyst -->|Approved Requirements| OutputFiles
