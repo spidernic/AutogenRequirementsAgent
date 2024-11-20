@@ -147,23 +147,70 @@ The following diagram represents the entities and relationships involved in **Au
 
 ```mermaid
 erDiagram
-    User {
-        string id
-        string topic
-    }
-    Agent {
+    PLAN {
         string id
         string name
-        string role
+        string description
     }
-    Output {
+
+    STEP {
         string id
-        string format
-        text content
+        string step_name
+        string details
     }
-    User ||--o{ Agent : interacts_with
-    Agent ||--|{ Output : generates
-    Output }|--|| User : provides_to
+
+    FUNCTIONAL_REQUIREMENTS {
+        string id
+        string description
+    }
+
+    NON_FUNCTIONAL_REQUIREMENTS {
+        string id
+        string description
+    }
+
+    INTEGRATION_REQUIREMENTS {
+        string id
+        string description
+    }
+
+    COMPONENTS {
+        string id
+        string name
+        string description
+    }
+
+    USER_MANAGEMENT {
+        string id
+        string role
+        string permission
+    }
+
+    AUTHENTICATION_MECHANISMS {
+        string id
+        string mechanism
+    }
+
+    INTEGRATION {
+        string id
+        string system
+        string description
+    }
+
+    TECHNOLOGY_STACK {
+        string id
+        string alignment
+    }
+
+    PLAN ||--o{ STEP : contains
+    STEP ||--o{ FUNCTIONAL_REQUIREMENTS : includes
+    STEP ||--o{ NON_FUNCTIONAL_REQUIREMENTS : includes
+    STEP ||--o{ INTEGRATION_REQUIREMENTS : includes
+    STEP ||--o{ COMPONENTS : involves
+    STEP ||--o{ USER_MANAGEMENT : defines
+    STEP ||--o{ AUTHENTICATION_MECHANISMS : uses
+    STEP ||--o{ INTEGRATION : maps
+    STEP ||--o{ TECHNOLOGY_STACK : aligns
 ```
 
 ---
