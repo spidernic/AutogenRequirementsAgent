@@ -123,16 +123,16 @@ The following diagram represents the high-level data flow within **AutoRequireme
 
 ```mermaid
 graph TD
-    UserInput["yaml"]
+    UserInput["yaml configuration"]
     Initializer["Initializer Agent"]
     PlanningAgent["Planning Agent"]
     Analyst["Analyst Agent"]
-    QAManager["QA Manager"]
+    QAManager["QA Manager Agent"]
     OutputFiles["Output Files (JSON & TXT)"]
 
     UserInput --> Initializer
     Initializer --> PlanningAgent
-    PlanningAgent -->|plan / steps| Analyst
+    PlanningAgent -->|plan and steps| Analyst
     PlanningAgent -->|plan| OutputFiles
     subgraph QAProcess ["Iterate per each step"]
         Analyst -->|step requirements| QAManager
