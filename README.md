@@ -1,22 +1,31 @@
 ## **AutoRequirementsAgent**
 
-** Experimental, using only STRICT JSON format messaging between AI agents. **
+** Experiment **
+- Forcing STRICT JSON format messaging between AI agents.
+- Testing State Transition function:
+  - [ ] Reading individual messages between agents, in JSON, looking for specific value-keys with specific content
+  - [ ] Adding DoCase logic based on the content.
+  - [ ] Double checking results for inference in math operations (using python calculation), semantic error trapping. 
+- Nested Groupchat (like the inner monologue, but a bit different)
 
-** First time it works well and is consistent using only OSS LLMs.**
+** Preliminary results **
+** Works well and is consistent using select finetuned OSS LLMs.**
 Tested in:
 - [ ] Ollama for serving local LLMs ** ([Ollama.com](https://ollama.com))
 - [ ] Nvidia/Llama-3.1-Nemotron-70B-Instruct-HF (https://huggingface.co/nvidia/Llama-3.1-Nemotron-70B-Instruct-HF)
 - [ ] hermes3:70b-llama3.1-q8_0 (https://ollama.com/library/hermes3:70b-llama3.1-q8_0)
 
-Ollama list:
-```
+Meta: Ollama list:
+```bash
 % ollama list
 NAME                                     ID              SIZE      MODIFIED         
 hermes3:70b-llama3.1-q8_0                72f0aa5b30bb    74 GB     3 weeks ago     
 nemotron:70b-instruct-fp16               e02a46ff1109    141 GB    4 weeks ago 
 ```
 
-**Description:**
+-------
+
+## **Experiment description:**
 
 **AutoRequirementsAgent** is a Python-based automation tool designed to streamline the process of generating and refining requirements for any project or topic. Powered by **Open Source LLMs**, it leverages advanced natural language understanding to:
 
@@ -54,6 +63,7 @@ By building on open source technology, **AutoRequirementsAgent** combines innova
 
 - **Integrated QA Review Simulation:**
   - Emulates a QA Manager to evaluate completeness, clarity, relevance, and depth.
+    - [ ] Ratings 1 to 5 (1 is poor, 5 is excellent)
   - Provides feedback and suggests revisions for higher-quality requirements.
 
 - **Structured Outputs:**
@@ -113,18 +123,21 @@ The following diagram represents the high-level data flow within **AutoRequireme
 
 ```mermaid
 graph TD
-    UserInput["User Input"]
+    UserInput["yaml configuration"]
     Initializer["Initializer Agent"]
     PlanningAgent["Planning Agent"]
     Analyst["Analyst Agent"]
-    QAManager["QA Manager"]
+    QAManager["QA Manager Agent"]
     OutputFiles["Output Files (JSON & TXT)"]
 
     UserInput --> Initializer
     Initializer --> PlanningAgent
-    PlanningAgent --> Analyst
-    Analyst --> QAManager
-    QAManager -->|Feedback or Approval| Analyst
+    PlanningAgent -->|plan and steps| Analyst
+    PlanningAgent -->|plan| OutputFiles
+    subgraph QAProcess ["Iterate per each step"]
+        Analyst -->|step requirements| QAManager
+        QAManager -->|Feedback or Approval| Analyst
+    end
     Analyst -->|Approved Requirements| OutputFiles
 ```
 
@@ -134,23 +147,70 @@ The following diagram represents the entities and relationships involved in **Au
 
 ```mermaid
 erDiagram
-    User {
-        string id
-        string topic
-    }
-    Agent {
+    PLAN {
         string id
         string name
-        string role
+        string description
     }
-    Output {
+
+    STEP {
         string id
-        string format
-        text content
+        string step_name
+        string details
     }
-    User ||--o{ Agent : interacts_with
-    Agent ||--|{ Output : generates
-    Output }|--|| User : provides_to
+
+    FUNCTIONAL_REQUIREMENTS {
+        string id
+        string description
+    }
+
+    NON_FUNCTIONAL_REQUIREMENTS {
+        string id
+        string description
+    }
+
+    INTEGRATION_REQUIREMENTS {
+        string id
+        string description
+    }
+
+    COMPONENTS {
+        string id
+        string name
+        string description
+    }
+
+    USER_MANAGEMENT {
+        string id
+        string role
+        string permission
+    }
+
+    AUTHENTICATION_MECHANISMS {
+        string id
+        string mechanism
+    }
+
+    INTEGRATION {
+        string id
+        string system
+        string description
+    }
+
+    TECHNOLOGY_STACK {
+        string id
+        string alignment
+    }
+
+    PLAN ||--o{ STEP : contains
+    STEP ||--o{ FUNCTIONAL_REQUIREMENTS : includes
+    STEP ||--o{ NON_FUNCTIONAL_REQUIREMENTS : includes
+    STEP ||--o{ INTEGRATION_REQUIREMENTS : includes
+    STEP ||--o{ COMPONENTS : involves
+    STEP ||--o{ USER_MANAGEMENT : defines
+    STEP ||--o{ AUTHENTICATION_MECHANISMS : uses
+    STEP ||--o{ INTEGRATION : maps
+    STEP ||--o{ TECHNOLOGY_STACK : aligns
 ```
 
 ---
