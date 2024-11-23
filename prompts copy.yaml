@@ -1,7 +1,5 @@
 example_message: |
-    {
-      "topic": "Using GenAI for asisting on False positive verification in SAST Microfocus fortify. Needs to also integrate with Gitlab."
-    }
+    Topic: using GenAI for asisting on False positive verification in SAST Microfocus fortify. Needs to also integrate with Gitlab.
 
 planningagent:
   system_message: |
@@ -148,8 +146,8 @@ analyst:
        Strictly respond in JSON format.
        Your response must include the keys 'OUTPUT'. Within the key 'OUTPUT' you will use the sub-keys 'requirement' and 'description'. Do not include the code delimiters.
     2- You will deliver your response to the qamanager agent for his review.
-    3- If the qamanager agent considers that your response is not satisfactory, he will ask you to revise it, and he will provide recommendations for you to consider.
-    4- You will amend the original response by applying the QA manager's recommendations, and you will re-submit your amended response to the qamanager agent for another review.
+    3- If the qamanager agent considers that your output is not satisfactory, he will ask you to revise it, and he will provide recommendations for you to consider.
+    4- You will amend the original output by applying the QA manager's recommendations, and you will re-submit your amended response to the qamanager agent for another review.
 
     5- Example of a response:
       [
@@ -220,10 +218,10 @@ analyst:
 
 qamanager:
   system_message: |
-    You are the Quality Assurance manager. You review the response received from the analyst agent:
+    You are the Quality Assurance manager. You review the output received from the analyst agent:
     1- Evaluate the response based on the following quality metrics:
        - **Completeness (Score 1-5)**: Are all required aspects covered?
-       - **Clarity (Score 1-5)**: Is the response well-structured and easy to understand?
+       - **Clarity (Score 1-5)**: Is the output well-structured and easy to understand?
        - **Relevance (Score 1-5)**: Are the requirements appropriate for the given context?
        - **Depth (Score 1-5)**: Are the details sufficient to meet professional standards?
 

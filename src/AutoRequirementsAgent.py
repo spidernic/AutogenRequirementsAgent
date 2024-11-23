@@ -117,6 +117,7 @@ with open('generated_plan.txt', 'w') as f:
 
 print("Generated plan saved to 'generated_plan.json' and 'generated_plan.txt'.")
 
+
 # Function to process each step
 def process_step(step, outputs):
     # Reset agents for each step
@@ -137,7 +138,13 @@ def process_step(step, outputs):
             try:
                 feedback = json.loads(feedback_msg)
                 next_step = feedback.get('NEXTSTEP')
+                feedback_data = feedback.get('FEEDBACK', {})  # Default to empty dict if 'FEEDBACK' doesn't exist
+                score1 = feedback_data.get('OverallScore')  # Using .get() for safety
                 if next_step == 'APPROVED':
+                    if score1 < 5:
+                        print("*" * 125)
+                        print(f"Dude, the LLM is not doing Math very well, the overall score is {score1}, and is still saying APPROVE ?????")
+                        print("*" * 125)
                     return None  # End the conversation
                 elif next_step == 'REVISE':
                     return analyst  # Analyst needs to revise
@@ -150,7 +157,11 @@ def process_step(step, outputs):
             return None  # End if unexpected
 
     # Start the group chat with the step details
-    initial_message = f"Step: {step['step']}\nDetails: {step['details']}\n\n"
+    # initial_message = f"Step: {step['step']}\nDetails: {step['details']}\n\n"
+    initial_message = json.dumps({
+    "Step": step["step"],
+    "Details": step["details"]
+}, indent=4)
     # Use a temporary initializer to send the initial message
     step_initializer = autogen.UserProxyAgent(name="StepInitializer")
 
@@ -195,11 +206,42 @@ consolidated_report_json = []
 for step in steps:
     output = process_step(step, outputs)
     if output:
-        tempi = json.loads(output)
-        tempi['STEP_ID'] = step['step']
-        tempi['STEP_DETAILS'] = step['details']
-        outputs.append(json.dumps(tempi))
-        consolidated_report_json.append(tempi)
+        # Step 0: Remove the "OUTPUT:" prefix if present. This sometimes happens depending on the MoE that looks at the item.
+        if output.startswith("OUTPUT:"):
+            output = output.split("OUTPUT:", 1)[1]  # Remove the prefix
+        
+        # Step 1: Trim whitespace
+        output = output.strip()
+
+        # Step 2: Fix templated syntax if needed
+        if "{{" in output or "}}" in output:
+            output = output.replace("{{", "{").replace("}}", "}")
+
+        # Step 3: Parse the JSON
+        try:
+            # Fix: Handle potential extra data by splitting and parsing separately
+            json_objects = output.strip().split('\n\n')  # Split on double newlines or any separator
+            for json_part in json_objects:
+                try:
+                    parsed_data = json.loads(json_part)
+                    # Process as either list or dict
+                    if isinstance(parsed_data, list):
+                        for item in parsed_data:
+                            item['STEP_ID'] = step['step']
+                            outputs.append(json.dumps(item))
+                            consolidated_report_json.append(item)
+                    elif isinstance(parsed_data, dict):
+                        parsed_data['STEP_ID'] = step['step']
+                        outputs.append(json.dumps(parsed_data))
+                        consolidated_report_json.append(parsed_data)
+                except json.JSONDecodeError as e:
+                    print(f"JSONDecodeError in part: {e}")
+                    print(f"Invalid segment causing the issue: {repr(json_part)}")
+
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+            print(f"Output causing the issue: {repr(output)}")
+
     else:
         print(f"No approved output for step: {step['step']}")
 
