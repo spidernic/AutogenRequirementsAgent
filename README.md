@@ -244,6 +244,30 @@ erDiagram
 
 ---
 
+### **Latest Updates**
+
+#### Recent Improvements
+- **Concurrent Processing**: Added ThreadPoolExecutor for parallel processing of steps with a Semaphore limiting to 3 simultaneous executions
+- **Environment Configuration**: Added `.env` file support for flexible configuration:
+  - MODEL: "hermes3:8b-llama3.1-fp16"
+  - BASE_URL: "http://localhost:11434/v1"
+  - API_KEY: "ollama"
+  - TEMPERATURE: 0
+  - TIMEOUT: 220
+  - AUTOGEN_USE_DOCKER: False
+- **Random Seed Generation**: Replaced fixed cache_seed with random seed for more varied responses
+- **Improved File Organization**: Added dedicated 'output' directory for all generated files
+- **QA Manager Scoring**: Updated approval threshold from "exactly 5" to ">= 4.5" for more flexible quality assessment
+
+#### Output Files
+All generated files are now saved in the `output` directory:
+- `generated_plan.json`: JSON format of the initial plan
+- `generated_plan.txt`: Human-readable format of the initial plan
+- `consolidated_report.json`: JSON format of the final requirements
+- `consolidated_report.txt`: Human-readable format of the final requirements
+
+---
+
 ### **Output Examples**
 
 #### JSON Output:
